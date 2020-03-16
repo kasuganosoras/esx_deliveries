@@ -41,6 +41,12 @@ Config.Rewards = {
 Config.Models = {
 	scooter = 'faggio3',
 	-- van     = 'pony', -- The original game vehicle
+	-- Note: if you using the original vehicle, please modify "client/main.lua" line 232 and line 243
+	-- line 232: SetVehicleDoorOpen(CurrentVehicle, 2, false, false) -- Left Rear Door
+	--           SetVehicleDoorOpen(CurrentVehicle, 3, false, false) -- Right Rear Door
+	-------------------------------------------------------------------------
+	-- line 243: SetVehicleDoorShut(CurrentVehicle, 2, false) -- Left Rear Door
+	--           SetVehicleDoorShut(CurrentVehicle, 3, false) -- Right Rear Door
 	van     = 's1',      -- Chinese car Wuling hongguang S1
 	truck   = 'mule',
 }
