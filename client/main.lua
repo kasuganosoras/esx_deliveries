@@ -223,25 +223,8 @@ function HandleMarkers()
 				if GetDistanceBetweenCoords(pCoords.x, pCoords.y, pCoords.z, TrunkPos.x, TrunkPos.y, TrunkHeight, true) < 1.0 then
 					DisplayHelpText(Config.Locales["remove_goods"])
 					if IsControlJustReleased(0, 51) then
-						if CurrentType == 'truck' then
-							SetVehicleDoorOpen(CurrentVehicle, 2, false, false)
-							SetVehicleDoorOpen(CurrentVehicle, 3, false, false)
-							Wait(500)
-						end
-						if CurrentType == 'van' then
-							SetVehicleDoorOpen(CurrentVehicle, 5, false, false)
-							Wait(500)
-						end
+						PlayTrunkAnimation()
 						GetPlayerPropsForDelivery(CurrentType)
-						if CurrentType == 'truck' then
-							Wait(500)
-							SetVehicleDoorShut(CurrentVehicle, 2, false)
-							SetVehicleDoorShut(CurrentVehicle, 3, false)
-						end
-						if CurrentType == 'van' then
-							Wait(500)
-							SetVehicleDoorShut(CurrentVehicle, 5, false)
-						end
 						CurrentStatus = Status.PLAYER_REMOVED_GOODS_FROM_VEHICLE
 					end
 				end
@@ -293,6 +276,43 @@ function HandleMarkers()
 	end
 end
 
+-- The trunk animation when the player remove the goods from the vehicle
+function PlayTrunkAnimation()
+	Citizen.CreateThread(function()
+		if CurrentType == 'truck' then
+			if Config.Models.vehDoor.usingTrunkForTruck then
+				SetVehicleDoorOpen(CurrentVehicle, 5, false, false)
+			else
+				SetVehicleDoorOpen(CurrentVehicle, 2, false, false)
+				SetVehicleDoorOpen(CurrentVehicle, 3, false, false)
+			end
+		elseif CurrentType == 'van' then
+			if Config.Models.vehDoor.usingTrunkForVan then
+				SetVehicleDoorOpen(CurrentVehicle, 5, false, false)
+			else
+				
+			end
+			
+		end
+		Wait(1000)
+		if CurrentType == 'truck' then
+			if Config.Models.vehDoor.usingTrunkForTruck then
+				SetVehicleDoorShut(CurrentVehicle, 5, false)
+			else
+				SetVehicleDoorShut(CurrentVehicle, 2, false)
+				SetVehicleDoorShut(CurrentVehicle, 3, false)
+			end
+		elseif CurrentType == 'van' then
+			if Config.Models.vehDoor.usingTrunkForVan then
+				SetVehicleDoorShut(CurrentVehicle, 5, false)
+			else
+				SetVehicleDoorShut(CurrentVehicle, 2, false)
+				SetVehicleDoorShut(CurrentVehicle, 3, false)
+			end
+		end
+	end)
+end
+
 -- Create a blip for the location
 
 function CreateBlipAt(x, y, z)
@@ -317,25 +337,10 @@ function ForceCarryAnimation()
 	TaskPlayAnim(GetPlayerPed(-1), "anim@heists@box_carry@", "walk", 8.0, 8.0, -1, 51)
 end
 
--- Start the delivery job
+-- Tell the server start delivery job
 
 function StartDelivery(deliveryType)
-	
-	TriggerEvent("MpGameMessage:send", Config.Locales["delivery_start"], Config.Locales["delivery_tips"], 3500, 'success')
-	
-	LoadWorkPlayerSkin(deliveryType)
-	
-	local ModelHash = GetHashKey("prop_paper_bag_01")
-	
-	WaitModelLoad(ModelHash)
-	
-	SpawnDeliveryVehicle(deliveryType)
-	CreateRoute(deliveryType)
-	GetNextDeliveryPoint(true)
-	CurrentType   = deliveryType
-	CurrentStatus = Status.PLAYER_STARTED_DELIVERY
-	
-	TriggerServerEvent("esx_deliveries:removeSafeMoney:server", CurrentType)
+	TriggerServerEvent("esx_deliveries:removeSafeMoney:server", deliveryType)
 end
 
 -- Check is the player in the delivery vehicle
@@ -720,6 +725,7 @@ end)
 
 RegisterNetEvent('esx:setJob')
 RegisterNetEvent('esx_deliveries:setPlayerJob:client')
+RegisterNetEvent('esx_deliveries:startJob:client')
 
 AddEventHandler('esx:setJob', function(job)
 	PlayerJob = job.name
@@ -728,4 +734,16 @@ end)
 AddEventHandler('esx_deliveries:setPlayerJob:client', function(job)
 	print("Player job: " .. job)
 	PlayerJob = job
+end)
+
+AddEventHandler('esx_deliveries:startJob:client', function(deliveryType)
+	TriggerEvent("MpGameMessage:send", Config.Locales["delivery_start"], Config.Locales["delivery_tips"], 3500, 'success')
+	LoadWorkPlayerSkin(deliveryType)
+	local ModelHash = GetHashKey("prop_paper_bag_01")
+	WaitModelLoad(ModelHash)
+	SpawnDeliveryVehicle(deliveryType)
+	CreateRoute(deliveryType)
+	GetNextDeliveryPoint(true)
+	CurrentType   = deliveryType
+	CurrentStatus = Status.PLAYER_STARTED_DELIVERY
 end)
