@@ -41,14 +41,13 @@ Config.Rewards = {
 Config.Models = {
 	scooter = 'faggio3',
 	-- van     = 'pony', -- The original game vehicle
-	-- Note: if you using the original vehicle, please modify "client/main.lua" line 232 and line 243
-	-- line 232: SetVehicleDoorOpen(CurrentVehicle, 2, false, false) -- Left Rear Door
-	--           SetVehicleDoorOpen(CurrentVehicle, 3, false, false) -- Right Rear Door
-	-------------------------------------------------------------------------
-	-- line 243: SetVehicleDoorShut(CurrentVehicle, 2, false) -- Left Rear Door
-	--           SetVehicleDoorShut(CurrentVehicle, 3, false) -- Right Rear Door
-	van     = 's1',      -- Chinese car Wuling hongguang S1
+	van     = 's1',      -- Chinese car Wuling hong guang S1
 	truck   = 'mule',
+	vehDoor = {
+		-- If this value is true, it will open the vehicle trunk when player remove the goods from the vehicle.
+		usingTrunkForVan   = true,  -- If you using original game vehicle, set this to false
+		usingTrunkForTruck = false,
+	},
 }
 
 -- Scale of the arrow, usually not modified it
@@ -251,4 +250,5 @@ Config.Locales = {
 	["delivery_finish"]           = "You finish the deliveries mission",
 	["delivery_start"]            = "Delivery",
 	["delivery_tips"]             = "Drive the car safely to the destination and delivery the ~y~goods~s~",
+	["not_enough_money"]          = "Your have not enough bank money to pay the ~r~safe deposit~s~",
 }
