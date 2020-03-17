@@ -377,6 +377,11 @@ end
 
 function GetPlayerPropsForDelivery(deliveryType)
 	
+	RequestAnimDict("anim@heists@box_carry@")
+	while not HasAnimDictLoaded("anim@heists@box_carry@") do
+		Citizen.Wait(0)
+	end
+		
 	if deliveryType == 'scooter' then
 		local ModelHash = GetHashKey("prop_paper_bag_01")
 		local PlayerPed = GetPlayerPed(-1)
@@ -410,7 +415,7 @@ function GetPlayerPropsForDelivery(deliveryType)
 	end
 	
 	if deliveryType == 'truck' then
-		TaskPlayAnim(GetPlayerPed(-1), "anim@heists@box_carry@", "walk", 8.0, 8.0, -1, 52)
+		TaskPlayAnim(GetPlayerPed(-1), "anim@heists@box_carry@", "walk", 8.0, 8.0, -1, 51)
 		
 		local ModelHash = GetHashKey("prop_sacktruck_02b")
 		
