@@ -58,8 +58,14 @@ AddEventHandler('esx_deliveries:removeSafeMoney:server', function(deliveryType)
 			break
 		end
 	end
-    xPlayer.removeAccountMoney("bank", SafeMoney)
-	xPlayer.showNotification(Config.Locales["safe_deposit_received"])
+	local PlayerMoney = xPlayer.getAccount('bank').money
+	if PlayerMoney >= SafeMoney then
+		xPlayer.removeAccountMoney("bank", SafeMoney)
+		xPlayer.showNotification(Config.Locales["safe_deposit_received"])
+		TriggerClientEvent('esx_deliveries:startJob:client', source, deliveryType)
+	else
+		xPlayer.showNotification(Config.Locales["not_enough_money"])
+	end
 end)
 
 -- Get the player job name
