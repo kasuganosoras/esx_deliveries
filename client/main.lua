@@ -674,6 +674,9 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 	end
 	Wait(1000)
+	while not ESX.IsPlayerLoaded() do
+		Citizen.Wait(10)
+	end
 	TriggerServerEvent("esx_deliveries:getPlayerJob:server")
 end)
 
