@@ -3,7 +3,9 @@
 --[[ ============================================================ ]]--
 
 Config = {}
-Config.Locale                     = 'fr'
+
+-- Locales
+Config.Locale = 'en'
 
 -- Delivery Base Location
 Config.Base = {
@@ -33,16 +35,16 @@ Config.Deliveries = {
 
 -- The salary of jobs
 Config.Rewards = {
-	scooter = 80,
-	van     = 100,
-	truck   = 150,
+	scooter = 800,
+	van     = 1000,
+	truck   = 1500,
 }
 
 -- Vehicle model
 Config.Models = {
 	scooter = 'faggio3',
 	-- van     = 'pony', -- The original game vehicle
-	van     = 'Burrito3',      -- Chinese car Wuling hong guang S1
+	van     = 's1',      -- Chinese car Wuling hong guang S1
 	truck   = 'mule',
 	vehDoor = {
 		-- If this value is true, it will open the vehicle trunk when player remove the goods from the vehicle.
@@ -60,9 +62,9 @@ Config.Scales = {
 
 -- Rental money of the vehicles
 Config.Safe = {
-	scooter = 400,
-	van     = 600,
-	truck   = 800,
+	scooter = 4000,
+	van     = 6000,
+	truck   = 8000,
 }
 
 -- Random parking locations

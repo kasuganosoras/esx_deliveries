@@ -69,6 +69,10 @@ end
 
 function HandleInput()
 	
+	if PlayerJob ~= "delivery" then
+		return
+	end
+	
 	if CurrentStatus == Status.PLAYER_REMOVED_GOODS_FROM_VEHICLE then
 		DisableControlAction(0, 21, true)
 	else
@@ -79,6 +83,10 @@ end
 -- Main logic handler
 
 function HandleLogic()
+	
+	if PlayerJob ~= "delivery" then
+		return
+	end
 	
 	local playerPed = GetPlayerPed(-1)
 	local pCoords   = GetEntityCoords(playerPed)
@@ -149,7 +157,11 @@ end
 -- Handling markers and object status
 
 function HandleMarkers()
-
+	
+	if PlayerJob ~= "delivery" then
+		return
+	end
+	
 	local pCoords = GetEntityCoords(GetPlayerPed(-1))
 	local deleter = Config.Base.deleter
 	
@@ -665,7 +677,7 @@ Citizen.CreateThread(function()
 	while not ESX.IsPlayerLoaded() do
 		Citizen.Wait(10)
 	end
-	--TriggerServerEvent("esx_deliveries:getPlayerJob:server")
+	TriggerServerEvent("esx_deliveries:getPlayerJob:server")
 end)
 
 -- Main thread
@@ -676,7 +688,7 @@ Citizen.CreateThread(function()
 	SetBlipColour(blip, 5)
 	SetBlipAsShortRange(blip, true)
 	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentString(_U("blip_name"))
+	AddTextComponentString(_U('blip_name'))
 	EndTextCommandSetBlipName(blip)
 end)
 
@@ -723,11 +735,12 @@ AddEventHandler('esx:setJob', function(job)
 end)
 
 AddEventHandler('esx_deliveries:setPlayerJob:client', function(job)
+	print("Player job: " .. job)
 	PlayerJob = job
 end)
 
 AddEventHandler('esx_deliveries:startJob:client', function(deliveryType)
-	TriggerEvent("MpGameMessage:send", _U('delivery_start'), _U('delivery_tips'), 3500, 'success')
+	TriggerEvent("MpGameMessage:send", _U("delivery_start"), _U("delivery_tips"), 3500, 'success')
 	LoadWorkPlayerSkin(deliveryType)
 	local ModelHash = GetHashKey("prop_paper_bag_01")
 	WaitModelLoad(ModelHash)

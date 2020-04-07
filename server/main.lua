@@ -72,5 +72,6 @@ end)
 
 AddEventHandler('esx_deliveries:getPlayerJob:server', function()
     local xPlayer = ESX.GetPlayerFromId(source)
+	print("Player request job: " .. source .. ", " .. xPlayer.job.name)
 	TriggerClientEvent('esx_deliveries:setPlayerJob:client', source, xPlayer.job.name)
 end)
