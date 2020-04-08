@@ -4,6 +4,9 @@
 
 Config = {}
 
+-- Locales
+Config.Locale = 'en'
+
 -- Delivery Base Location
 Config.Base = {
 	-- Blip coords
@@ -224,31 +227,4 @@ Config.OutfitVanF = {
 Config.VanGoodsPropNames = {
 	"prop_crate_11e",
     "prop_cardbordbox_02a",
-}
-
--- Locales
-Config.Locales = {
-	["delivery_not_available"]    = "This model is ~r~Unavailable~w~, please use ~g~bike~w~ or ~g~van~w~.",
-	["start_delivery"]            = "Press ~INPUT_CONTEXT~ to start delivery job, you need to pay the safe deposit for ~g~$",
-	["safe_deposit_received"]     = "The safe deposit has been remove from your bank account",
-	["safe_deposit_returned"]     = "The safe deposit return to your bank account now",
-	["safe_deposit_withheld"]     = "Mission ~r~failed~w~, your safe deposit has been ~r~detain~w~.",
-	["delivery_point_reward"]     = "Mission complete, you received ~g~$",
-	["get_back_in_vehicle"]       = "Enter your ~y~vehicle~s~",
-	["remove_goods"]              = "Press ~INPUT_CONTEXT~ to take out the ~y~goods~s~ from the car",
-	["remove_goods_subtext"]      = "Leave your car and take out the ~y~goods~w~",
-	["drive_next_point"]          = "Drive car to next ~y~destination~w~",
-	["deliver_inside_shop"]       = "Take the ~y~goods~w~ to the destination",
-	["get_back_to_deliveryhub"]   = "Back to the delivery hub and return the car",
-	["delivery_vehicle_returned"] = "Your car has been return",
-	["finish_job"]                = "Mission status: ~g~",
-	["end_delivery"]              = "Press ~INPUT_CONTEXT~ to terminate the mission, please sit in the car, or you will not get the safe deposit",
-	["blip_name"]                 = "Delivery Hub",
-	["dst_blip"]                  = "Delivery",
-	["delivery_end"]              = "Delivery End",
-	["delivery_failed"]           = "You lose the safe deposit because your car broken or lost",
-	["delivery_finish"]           = "You finish the deliveries mission",
-	["delivery_start"]            = "Delivery",
-	["delivery_tips"]             = "Drive the car safely to the destination and delivery the ~y~goods~s~",
-	["not_enough_money"]          = "Your have not enough bank money to pay the ~r~safe deposit~s~",
 }
