@@ -10,10 +10,16 @@ version '1.0'
 
 client_scripts {
 	"config.lua",
+	"locales/en.lua",
+	"locales/zh.lua",
+	"locales/fr.lua",
 	"client/main.lua"
 }
 
 server_scripts {
 	"config.lua",
+	"locales/en.lua",
+	"locales/zh.lua",
+	"locales/fr.lua",
 	"server/main.lua"
 }
