@@ -26,9 +26,9 @@ AddEventHandler('esx_deliveries:returnSafe:server', function(deliveryType, safeR
 			end
 		end
 		xPlayer.addAccountMoney("bank", SafeMoney)
-		xPlayer.showNotification(Config.Locales["safe_deposit_returned"])
+		xPlayer.showNotification(_U("safe_deposit_returned"))
 	else
-		xPlayer.showNotification(Config.Locales["safe_deposit_withheld"])
+		xPlayer.showNotification(_U("safe_deposit_withheld"))
 	end
 end)
 
@@ -44,7 +44,7 @@ AddEventHandler('esx_deliveries:finishDelivery:server', function(deliveryType)
 		end
 	end
     xPlayer.addMoney(deliveryMoney)
-	xPlayer.showNotification(Config.Locales["delivery_point_reward"] .. tostring(deliveryMoney))
+	xPlayer.showNotification(_U("delivery_point_reward") .. tostring(deliveryMoney))
 end)
 
 -- Remove safe deposit event (On start mission)
@@ -61,10 +61,10 @@ AddEventHandler('esx_deliveries:removeSafeMoney:server', function(deliveryType)
 	local PlayerMoney = xPlayer.getAccount('bank').money
 	if PlayerMoney >= SafeMoney then
 		xPlayer.removeAccountMoney("bank", SafeMoney)
-		xPlayer.showNotification(Config.Locales["safe_deposit_received"])
+		xPlayer.showNotification(_U("safe_deposit_received"))
 		TriggerClientEvent('esx_deliveries:startJob:client', source, deliveryType)
 	else
-		xPlayer.showNotification(Config.Locales["not_enough_money"])
+		xPlayer.showNotification(_U("not_enough_money"))
 	end
 end)
 

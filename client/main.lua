@@ -102,21 +102,21 @@ function HandleLogic()
 	
 		if CurrentStatus == Status.PLAYER_STARTED_DELIVERY then
 			if not IsPlayerInsideDeliveryVehicle() then
-				CurrentSubtitle = Config.Locales["get_back_in_vehicle"]
+				CurrentSubtitle = _U("get_back_in_vehicle")
 			else
 				CurrentSubtitle = nil
 			end
 			
 			if GetDistanceBetweenCoords(pCoords.x, pCoords.y, pCoords.z, DeliveryLocation.Item1.x, DeliveryLocation.Item1.y, DeliveryLocation.Item1.z, true) < 1.5 then
 				CurrentStatus = Status.PLAYER_REACHED_VEHICLE_POINT
-				CurrentSubtitle = Config.Locales["remove_goods_subtext"]
+				CurrentSubtitle = _U("remove_goods_subtext")
 				PlaySound(-1, "Menu_Accept", "Phone_SoundSet_Default", false, 0, true)
 			end
 		end
 		
 		if CurrentStatus == Status.PLAYER_REMOVED_GOODS_FROM_VEHICLE then
 			if CurrentType == 'van' or CurrentType == 'truck' then
-				CurrentSubtitle = Config.Locales["deliver_inside_shop"]
+				CurrentSubtitle = _U("deliver_inside_shop")
 				if CurrentType == 'van' and not IsEntityPlayingAnim(playerPed, "anim@heists@box_carry@", "walk", 3) then
 					ForceCarryAnimation();
 				end
@@ -128,7 +128,7 @@ function HandleLogic()
 				PlaySound(-1, "Menu_Accept", "Phone_SoundSet_Default", false, 0, true)
 				FinishedJobs = FinishedJobs + 1
 				
-				ESX.ShowNotification(Config.Locales["finish_job"] .. FinishedJobs .. "/" .. #DeliveryRoutes)
+				ESX.ShowNotification(_U("finish_job") .. FinishedJobs .. "/" .. #DeliveryRoutes)
 				
 				if FinishedJobs >= #DeliveryRoutes then
 					RemovePlayerProps()
@@ -136,14 +136,14 @@ function HandleLogic()
 					DeliveryLocation.Item1 = Config.Base.retveh
 					DeliveryLocation.Item2 = {x = 0, y = 0, z = 0}
 					CurrentBlip            = CreateBlipAt(DeliveryLocation.Item1.x, DeliveryLocation.Item1.y, DeliveryLocation.Item1.z)
-					CurrentSubtitle        = Config.Locales["get_back_to_deliveryhub"]
+					CurrentSubtitle        = _U("get_back_to_deliveryhub")
 					CurrentStatus          = Status.PLAYER_RETURNING_TO_BASE
 					return
 				else
 					RemovePlayerProps()
 					GetNextDeliveryPoint(false)
 					CurrentStatus = Status.PLAYER_STARTED_DELIVERY
-					CurrentSubtitle = Config.Locales["drive_next_point"]
+					CurrentSubtitle = _U("drive_next_point")
 					PlaySound(-1, "Menu_Accept", "Phone_SoundSet_Default", false, 0, true)
 				end
 			end
@@ -168,7 +168,7 @@ function HandleMarkers()
 	if CurrentStatus ~= Status.DELIVERY_INACTIVE then
 		DrawMarker(20, deleter.x, deleter.y, deleter.z, 0, 0, 0, 0, 180.0, 0, 1.5, 1.5, 1.5, 249, 38, 114, 150, true, true)
 		if GetDistanceBetweenCoords(pCoords.x, pCoords.y, pCoords.z, deleter.x, deleter.y, deleter.z) < 1.5 then
-			DisplayHelpText(Config.Locales["end_delivery"])
+			DisplayHelpText(_U("end_delivery"))
 			if IsControlJustReleased(0, 51) then
 				EndDelivery()
 				return
@@ -221,7 +221,7 @@ function HandleMarkers()
 				DrawMarker(20, TrunkPos.x, TrunkPos.y, TrunkHeight, 0, 0, 0, 180.0, 0, 0, ArrowSize.x, ArrowSize.y, ArrowSize.z, 102, 217, 239, 150, true, true)
 				
 				if GetDistanceBetweenCoords(pCoords.x, pCoords.y, pCoords.z, TrunkPos.x, TrunkPos.y, TrunkHeight, true) < 1.0 then
-					DisplayHelpText(Config.Locales["remove_goods"])
+					DisplayHelpText(_U("remove_goods"))
 					if IsControlJustReleased(0, 51) then
 						PlayTrunkAnimation()
 						GetPlayerPropsForDelivery(CurrentType)
@@ -254,13 +254,13 @@ function HandleMarkers()
 			local SelectType = false
 			
 			if GetDistanceBetweenCoords(pCoords.x, pCoords.y, pCoords.z, ScooterPos.x, ScooterPos.y, ScooterPos.z, true) < 1.5 then
-				DisplayHelpText(Config.Locales["start_delivery"] .. tostring(Config.Safe.scooter))
+				DisplayHelpText(_U("start_delivery") .. tostring(Config.Safe.scooter))
 				SelectType = 'scooter'
 			elseif GetDistanceBetweenCoords(pCoords.x, pCoords.y, pCoords.z, VanPos.x, VanPos.y, VanPos.z, true) < 1.5 then
-				DisplayHelpText(Config.Locales["start_delivery"] .. tostring(Config.Safe.van))
+				DisplayHelpText(_U("start_delivery") .. tostring(Config.Safe.van))
 				SelectType = 'van'
 			elseif GetDistanceBetweenCoords(pCoords.x, pCoords.y, pCoords.z, TruckPos.x, TruckPos.y, TruckPos.z, true) < 1.5 then
-				DisplayHelpText(Config.Locales["start_delivery"] .. tostring(Config.Safe.truck))
+				DisplayHelpText(_U("start_delivery") .. tostring(Config.Safe.truck))
 				SelectType = 'truck'
 			else
 				SelectType = false
@@ -323,7 +323,7 @@ function CreateBlipAt(x, y, z)
 	SetBlipColour(tmpBlip, 66)
 	SetBlipAsShortRange(tmpBlip, true)
 	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentString(Config.Locales["dst_blip"])
+	AddTextComponentString(_U("dst_blip"))
 	EndTextCommandSetBlipName(blip)
 	SetBlipAsMissionCreatorBlip(tmpBlip, true)
 	SetBlipRoute(tmpBlip, true)
@@ -583,10 +583,10 @@ end
 function EndDelivery()
 	local PlayerPed = GetPlayerPed(-1)
 	if not IsPedSittingInAnyVehicle(PlayerPed) or GetVehiclePedIsIn(PlayerPed) ~= CurrentVehicle then
-		TriggerEvent("MpGameMessage:send", Config.Locales["delivery_end"], Config.Locales["delivery_failed"], 3500, 'error')
+		TriggerEvent("MpGameMessage:send", _U("delivery_end"), _U("delivery_failed"), 3500, 'error')
 		FinishDelivery(CurrentType, false)
 	else
-		TriggerEvent("MpGameMessage:send", Config.Locales["delivery_end"], Config.Locales["delivery_finish"], 3500, 'success')
+		TriggerEvent("MpGameMessage:send", _U("delivery_end"), _U("delivery_finish"), 3500, 'success')
 		ReturnVehicle(CurrentType)
 	end
 end
@@ -596,7 +596,7 @@ end
 function ReturnVehicle(deliveryType)
 	SetVehicleAsNoLongerNeeded(CurrentVehicle)
 	DeleteEntity(CurrentVehicle)
-	ESX.ShowNotification(Config.Locales["delivery_vehicle_returned"])
+	ESX.ShowNotification(_U("delivery_vehicle_returned"))
 	FinishDelivery(deliveryType, true)
 end
 
@@ -688,7 +688,7 @@ Citizen.CreateThread(function()
 	SetBlipColour(blip, 5)
 	SetBlipAsShortRange(blip, true)
 	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentString(Config.Locales['blip_name'])
+	AddTextComponentString(_U('blip_name'))
 	EndTextCommandSetBlipName(blip)
 end)
 
@@ -740,7 +740,7 @@ AddEventHandler('esx_deliveries:setPlayerJob:client', function(job)
 end)
 
 AddEventHandler('esx_deliveries:startJob:client', function(deliveryType)
-	TriggerEvent("MpGameMessage:send", Config.Locales["delivery_start"], Config.Locales["delivery_tips"], 3500, 'success')
+	TriggerEvent("MpGameMessage:send", _U("delivery_start"), _U("delivery_tips"), 3500, 'success')
 	LoadWorkPlayerSkin(deliveryType)
 	local ModelHash = GetHashKey("prop_paper_bag_01")
 	WaitModelLoad(ModelHash)
