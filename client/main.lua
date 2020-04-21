@@ -454,17 +454,20 @@ function SpawnDeliveryVehicle(deliveryType)
 	
 	local Rnd           = GetRandomFromRange(1, #Config.ParkingSpawns)
 	local SpawnLocation = Config.ParkingSpawns[Rnd]
+	local plate = 'RUNR ' .. math.random(100, 900) -- Plate RUNR + random number
 	
 	if deliveryType == 'scooter' then
 		local ModelHash = GetHashKey(Config.Models.scooter)
 		WaitModelLoad(ModelHash)
 		CurrentVehicle = CreateVehicle(ModelHash, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z, SpawnLocation.h, true, true)
+		SetVehicleNumberPlateText(CurrentVehicle, plate)
 	end
 	
 	if deliveryType == 'truck' then
 		local ModelHash = GetHashKey(Config.Models.truck)
 		WaitModelLoad(ModelHash)
 		CurrentVehicle = CreateVehicle(ModelHash, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z, SpawnLocation.h, true, true)
+		SetVehicleNumberPlateText(CurrentVehicle, plate)
 		SetVehicleLivery(CurrentVehicle, 2)
 	end
 	
@@ -472,6 +475,7 @@ function SpawnDeliveryVehicle(deliveryType)
 		local ModelHash = GetHashKey(Config.Models.van)
 		WaitModelLoad(ModelHash)
 		CurrentVehicle = CreateVehicle(ModelHash, SpawnLocation.x, SpawnLocation.y, SpawnLocation.z, SpawnLocation.h, true, true)
+		SetVehicleNumberPlateText(CurrentVehicle, plate)
 		SetVehicleExtra(CurrentVehicle, 2, false)
 		SetVehicleLivery(CurrentVehicle, 0)
 		SetVehicleColours(CurrentVehicle, 0, 0)
