@@ -32,7 +32,7 @@ local FinishedJobs              = 0
 
 function LoadWorkPlayerSkin(deliveryType)
 	
-	local playerPed = GetPlayerPed(-1)
+	local playerPed = PlayerPedId()
 	
 	if deliveryType == 'scooter' then
 		if IsPedMale(playerPed) then
@@ -88,7 +88,7 @@ function HandleLogic()
 		return
 	end
 	
-	local playerPed = GetPlayerPed(-1)
+	local playerPed = PlayerPedId()
 	local pCoords   = GetEntityCoords(playerPed)
 	
 	if CurrentStatus ~= Status.DELIVERY_INACTIVE then
@@ -162,7 +162,7 @@ function HandleMarkers()
 		return
 	end
 	
-	local pCoords = GetEntityCoords(GetPlayerPed(-1))
+	local pCoords = GetEntityCoords(PlayerPedId())
 	local deleter = Config.Base.deleter
 	
 	if CurrentStatus ~= Status.DELIVERY_INACTIVE then
@@ -334,7 +334,7 @@ end
 -- Let the player carry something
 
 function ForceCarryAnimation()
-	TaskPlayAnim(GetPlayerPed(-1), "anim@heists@box_carry@", "walk", 8.0, 8.0, -1, 51)
+	TaskPlayAnim(PlayerPedId(), "anim@heists@box_carry@", "walk", 8.0, 8.0, -1, 51)
 end
 
 -- Tell the server start delivery job
@@ -346,8 +346,8 @@ end
 -- Check is the player in the delivery vehicle
 
 function IsPlayerInsideDeliveryVehicle()
-	if IsPedSittingInAnyVehicle(GetPlayerPed(-1)) then
-		local playerVehicle = GetVehiclePedIsIn(GetPlayerPed(-1), false)
+	if IsPedSittingInAnyVehicle(PlayerPedId()) then
+		local playerVehicle = GetVehiclePedIsIn(PlayerPedId(), false)
 		if playerVehicle == CurrentVehicle then
 			return true
 		end
@@ -374,7 +374,7 @@ function RemovePlayerProps()
 		DetachEntity(CurrentAttachments[i])
 		DeleteEntity(CurrentAttachments[i])
 	end
-	ClearPedTasks(GetPlayerPed(-1))
+	ClearPedTasks(PlayerPedId())
 	CurrentAttachments = {}
 end
 
@@ -389,29 +389,26 @@ function GetPlayerPropsForDelivery(deliveryType)
 		
 	if deliveryType == 'scooter' then
 		local ModelHash = GetHashKey("prop_paper_bag_01")
-		local PlayerPed = GetPlayerPed(-1)
+		local PlayerPed = PlayerPedId()
 		local PlayerPos = GetEntityCoords(PlayerPed)
+			
+		WaitModelLoad(ModelHash)
 		
-		if not HasModelLoaded(ModelHash) then
-			
-			WaitModelLoad(ModelHash)
-			
-			local Object = CreateObject(ModelHash, PlayerPos.x, PlayerPos.y, PlayerPos.z, true, true, false)
-			
-			AttachEntityToEntity(Object, PlayerPed, GetPedBoneIndex(PlayerPed, 28422), 0.25, 0.0, 0.06, 65.0, -130.0, -65.0, true, true, false, true, 0, true)
-			table.insert(CurrentAttachments, Object)
-		end
+		local Object = CreateObject(ModelHash, PlayerPos.x, PlayerPos.y, PlayerPos.z, true, true, false)
+		
+		AttachEntityToEntity(Object, PlayerPed, GetPedBoneIndex(PlayerPed, 28422), 0.25, 0.0, 0.06, 65.0, -130.0, -65.0, true, true, false, true, 0, true)
+		table.insert(CurrentAttachments, Object)
 	end
 	
 	if deliveryType == 'van' then
-		TaskPlayAnim(GetPlayerPed(-1), "anim@heists@box_carry@", "walk", 8.0, 8.0, -1, 51)
+		TaskPlayAnim(PlayerPedId(), "anim@heists@box_carry@", "walk", 8.0, 8.0, -1, 51)
 		
 		local Rand      = GetRandomFromRange(1, #Config.VanGoodsPropNames)
 		local ModelHash = GetHashKey(Config.VanGoodsPropNames[Rand])
 		
 		WaitModelLoad(ModelHash)
 		
-		local PlayerPed = GetPlayerPed(-1)
+		local PlayerPed = PlayerPedId()
 		local PlayerPos = GetOffsetFromEntityInWorldCoords(PlayerPed, 0.0, 0.0, -5.0)
 		local Object = CreateObject(ModelHash, PlayerPos.x, PlayerPos.y, PlayerPos.z, true, false, false)
 		
@@ -420,13 +417,13 @@ function GetPlayerPropsForDelivery(deliveryType)
 	end
 	
 	if deliveryType == 'truck' then
-		TaskPlayAnim(GetPlayerPed(-1), "anim@heists@box_carry@", "walk", 8.0, 8.0, -1, 51)
+		TaskPlayAnim(PlayerPedId(), "anim@heists@box_carry@", "walk", 8.0, 8.0, -1, 51)
 		
 		local ModelHash = GetHashKey("prop_sacktruck_02b")
 		
 		WaitModelLoad(ModelHash)
 		
-		local PlayerPed = GetPlayerPed(-1)
+		local PlayerPed = PlayerPedId()
 		local PlayerPos = GetOffsetFromEntityInWorldCoords(PlayerPed, 0.0, 0.0, -5.0)
 		local Object = CreateObject(ModelHash, PlayerPos.x, PlayerPos.y, PlayerPos.z, true, false, false)
 		
@@ -549,7 +546,7 @@ function CreateRoute(deliveryType)
 		Wait(1)
 		local PreviousPoint = nil
 		if #DeliveryRoutes < 1 then
-			PreviousPoint = GetEntityCoords(GetPlayerPed(-1))
+			PreviousPoint = GetEntityCoords(PlayerPedId())
 		else
 			PreviousPoint = DeliveryRoutes[#DeliveryRoutes].Item1
 		end
@@ -581,7 +578,7 @@ end
 -- End Delivery, is the player finish or failed?
 
 function EndDelivery()
-	local PlayerPed = GetPlayerPed(-1)
+	local PlayerPed = PlayerPedId()
 	if not IsPedSittingInAnyVehicle(PlayerPed) or GetVehiclePedIsIn(PlayerPed) ~= CurrentVehicle then
 		TriggerEvent("MpGameMessage:send", _U("delivery_end"), _U("delivery_failed"), 3500, 'error')
 		FinishDelivery(CurrentType, false)
@@ -669,14 +666,16 @@ end
 -- Initialize ESX
 
 Citizen.CreateThread(function()
-	while ESX == nil do
-		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
-	end
-	Wait(1000)
-	while not ESX.IsPlayerLoaded() do
-		Citizen.Wait(10)
-	end
+    while ESX == nil do
+        TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+        Citizen.Wait(0)
+    end
+
+    while ESX.GetPlayerData().job == nil do
+        Citizen.Wait(10)
+    end
+
+    ESX.PlayerData = ESX.GetPlayerData()
 	TriggerServerEvent("esx_deliveries:getPlayerJob:server")
 end)
 
